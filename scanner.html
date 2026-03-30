@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan QR - Wayanad Police</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #eef2ff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 60px;
+      min-height: 100vh;
+    }
+
+    header {
+      width: 100%;
+      background: #1d4ed8;
+      color: white;
+      padding: 20px 15px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      margin-bottom: 25px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    header h2 {
+      margin: 5px 0 0 0;
+      font-size: 22px;
+      font-weight: 500;
+    }
+
+    /* Scanner wrapper for corner markers */
+    .scanner-wrapper {
+      position: relative;
+      width: 320px;
+      max-width: 90%;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+      background: black;
+    }
+
+    #reader {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Corner markers */
+    .corner {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border: 3px solid #1d4ed8;
+    }
+
+    .top-left {
+      top: 5px;
+      left: 5px;
+      border-right: none;
+      border-bottom: none;
+    }
+
+    .top-right {
+      top: 5px;
+      right: 5px;
+      border-left: none;
+      border-bottom: none;
+    }
+
+    .bottom-left {
+      bottom: 5px;
+      left: 5px;
+      border-right: none;
+      border-top: none;
+    }
+
+    .bottom-right {
+      bottom: 5px;
+      right: 5px;
+      border-left: none;
+      border-top: none;
+    }
+
+    #instructions {
+      margin-top: 15px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #333;
+      text-align: center;
+    }
+
+    #loading {
+      margin-top: 10px;
+      color: #555;
+      font-size: 15px;
+      font-weight: 400;
+    }
+
+    @media (max-width: 400px) {
+      .scanner-wrapper {
+        width: 90%;
+      }
+      header h1 { font-size: 24px; }
+      header h2 { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>WAYANAD POLICE</h1>
+  <h2>Patta Book System - QR Scanner</h2>
+</header>
+
+<div class="scanner-wrapper">
+  <div id="reader"></div>
+  <div class="corner top-left"></div>
+  <div class="corner top-right"></div>
+  <div class="corner bottom-left"></div>
+  <div class="corner bottom-right"></div>
+</div>
+
+<div id="instructions">Align the QR code inside the box</div>
+<div id="loading">⏳ Starting Scanner...</div>
+
+<script>
+const qr = new Html5Qrcode("reader");
+document.getElementById("loading").style.display = "block";
+
+qr.start(
+  { facingMode: "environment" },
+  { fps: 10, qrbox: 250 },
+  (decodedText) => {
+    qr.stop();
+    window.location.href = "form.html?id=" + encodeURIComponent(decodedText);
+  },
+  (errorMessage) => { console.log("QR Scan Error:", errorMessage); }
+).then(() => {
+  document.getElementById("loading").style.display = "none";
+}).catch(err => {
+  console.error("Failed to start QR scanner:", err);
+  document.getElementById("loading").innerText = "⚠️ Failed to start scanner.";
+});
+</script>
+
+</body>
+</html>
